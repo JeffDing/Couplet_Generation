@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新春对联生成器</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- 标题区域 -->
+        <div class="title-area">
+            <h1 class="main-title">新春对联生成器</h1>
+            <p class="subtitle">点击按钮，AI为您生成专属新春对联</p>
+        </div>
+
+        <!-- 对联展示区域 -->
+        <div class="couplet-container">
+            <!-- 横批 -->
+            <div class="horizontal-scroll-wrapper">
+                <div class="horizontal-scroll" id="horizontalScroll">
+                    <span class="scroll-text" id="horizontalText">福满人间</span>
+                </div>
+            </div>
+
+            <!-- 对联主体 -->
+            <div class="couplet-main">
+                <!-- 上联 -->
+                <div class="scroll-wrapper left">
+                    <div class="scroll upper-scroll" id="upperScroll">
+                        <div class="scroll-top"></div>
+                        <div class="scroll-body">
+                            <div class="scroll-content" id="upperText">
+                                <span>春</span>
+                                <span>风</span>
+                                <span>送</span>
+                                <span>暖</span>
+                                <span>入</span>
+                                <span>屠</span>
+                                <span>苏</span>
+                            </div>
+                        </div>
+                        <div class="scroll-bottom"></div>
+                    </div>
+                </div>
+
+                <!-- 中间装饰 -->
+                <div class="center-decoration">
+                    <div class="fu-character">福</div>
+                </div>
+
+                <!-- 下联 -->
+                <div class="scroll-wrapper right">
+                    <div class="scroll lower-scroll" id="lowerScroll">
+                        <div class="scroll-top"></div>
+                        <div class="scroll-body">
+                            <div class="scroll-content" id="lowerText">
+                                <span>瑞</span>
+                                <span>雪</span>
+                                <span>迎</span>
+                                <span>春</span>
+                                <span>到</span>
+                                <span>家</span>
+                                <span>门</span>
+                            </div>
+                        </div>
+                        <div class="scroll-bottom"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 按钮区域 -->
+        <div class="button-area">
+            <button class="generate-btn" id="generateBtn" onclick="generateCouplet()">
+                <span class="btn-text">生成对联</span>
+                <span class="btn-icon">✨</span>
+            </button>
+        </div>
+
+        <!-- 加载提示 -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">正在为您生成对联...</p>
+            </div>
+        </div>
+
+        <!-- 错误提示 -->
+        <div class="error-toast" id="errorToast">
+            <span class="error-text" id="errorText"></span>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
