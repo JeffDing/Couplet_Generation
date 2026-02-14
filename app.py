@@ -6,7 +6,7 @@
 import os
 import re
 import requests
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -112,14 +112,44 @@ def validate_couplet(upper, lower, horizontal):
     return True, "验证通过"
 
 
-def generate_couplet():
-    """生成对联，如果不符合要求则重新生成"""
+def generate_couplet(keywords=None, style='traditional', is_random=False):
+    """生成对联，如果不符合要求则重新生成
+    
+    Args:
+        keywords: 用户输入的关键词
+        style: 对联风格，'traditional'或'modern'
+        is_random: 是否随机生成
+    """
     max_attempts = 5
-    prompt = """请生成一副新春对联，要求：
+    
+    # 构建提示词
+    if is_random:
+        prompt = """请生成一副新春对联，要求：
 1. 上联和下联字数相同，在5-12字之间
 2. 横批在2-6字之间
 3. 内容喜庆、吉祥，适合春节使用
 4. 请严格按照以下格式输出，不要添加任何其他内容：
+
+上联：[上联内容]
+下联：[下联内容]
+横批：[横批内容]"""
+    else:
+        # 根据风格设置提示
+        style_desc = "传统典雅，用词典雅古朴，意境深远" if style == 'traditional' else "现代创新，语言新颖活泼，贴近生活"
+        
+        # 构建关键词提示
+        keyword_hint = ""
+        if keywords:
+            keyword_list = [k.strip() for k in keywords.split() if k.strip()]
+            if keyword_list:
+                keyword_hint = f"\n5. 请包含以下关键词：{'、'.join(keyword_list)}"
+        
+        prompt = f"""请生成一副新春对联，要求：
+1. 上联和下联字数相同，在5-12字之间
+2. 横批在2-6字之间
+3. 内容喜庆、吉祥，适合春节使用
+4. 风格要求：{style_desc}{keyword_hint}
+5. 请严格按照以下格式输出，不要添加任何其他内容：
 
 上联：[上联内容]
 下联：[下联内容]
@@ -163,7 +193,18 @@ def index():
 def api_generate():
     """API接口：生成对联"""
     try:
-        result = generate_couplet()
+        # 获取请求参数
+        data = request.get_json() or {}
+        keywords = data.get('keywords', '')
+        style = data.get('style', 'traditional')
+        is_random = data.get('random', False)
+        
+        # 调用生成函数
+        result = generate_couplet(
+            keywords=keywords if keywords else None,
+            style=style,
+            is_random=is_random
+        )
         return jsonify(result)
     except Exception as e:
         return jsonify({

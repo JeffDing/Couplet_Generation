@@ -36,11 +36,119 @@ body::before {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 900px;
+    max-width: 1400px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 30px;
+}
+
+/* 主内容区域 - 左右分栏 */
+.main-content {
+    display: flex;
+    gap: 40px;
+    width: 100%;
+    align-items: flex-start;
+}
+
+/* 左侧个性化定制区域 */
+.customization-area {
+    flex: 0 0 320px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 3px solid #FFD700;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    color: #8B0000;
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 1.1rem;
+    color: #8B0000;
+    font-weight: bold;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.input-group input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border: 2px solid #DC143C;
+    border-radius: 8px;
+    background: #FFF;
+    color: #333;
+    font-family: 'Ma Shan Zheng', cursive;
+    transition: all 0.3s ease;
+}
+
+.input-group input[type="text"]:focus {
+    outline: none;
+    border-color: #FFD700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.input-hint {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+.style-options {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.style-option {
+    flex: 1;
+    min-width: 120px;
+    cursor: pointer;
+}
+
+.style-option input[type="radio"] {
+    display: none;
+}
+
+.style-label {
+    display: block;
+    padding: 12px 20px;
+    background: #FFF;
+    border: 2px solid #DC143C;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1rem;
+    color: #8B0000;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.style-option input[type="radio"]:checked + .style-label {
+    background: linear-gradient(135deg, #DC143C 0%, #8B0000 100%);
+    color: #FFD700;
+    border-color: #FFD700;
+    box-shadow: 0 4px 12px rgba(220, 20, 60, 0.4);
+}
+
+.style-label:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
 }
 
 /* 标题区域 */
@@ -287,13 +395,16 @@ body::before {
 /* 按钮区域 */
 .button-area {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .generate-btn {
     background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
     border: none;
-    padding: 18px 50px;
-    font-size: 1.5rem;
+    padding: 15px 30px;
+    font-size: 1.3rem;
     font-family: 'Ma Shan Zheng', cursive;
     color: #8B0000;
     border-radius: 50px;
@@ -304,9 +415,11 @@ body::before {
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     font-weight: bold;
     letter-spacing: 3px;
+    width: 100%;
 }
 
 .generate-btn:hover {
@@ -324,6 +437,15 @@ body::before {
     opacity: 0.7;
     cursor: not-allowed;
     transform: none;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+}
+
+.secondary-btn {
+    background: linear-gradient(135deg, #DC143C 0%, #8B0000 100%);
+    color: #FFD700;
 }
 
 .btn-icon {
@@ -433,6 +555,17 @@ body::before {
     
     .subtitle {
         font-size: 1rem;
+    }
+    
+    .main-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .customization-area {
+        flex: none;
+        width: 100%;
+        max-width: 400px;
     }
     
     .couplet-main {

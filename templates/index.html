@@ -12,71 +12,105 @@
         <!-- 标题区域 -->
         <div class="title-area">
             <h1 class="main-title">新春对联生成器</h1>
-            <p class="subtitle">点击按钮，AI为您生成专属新春对联</p>
+            <p class="subtitle">AI为您生成专属新春对联</p>
         </div>
 
-        <!-- 对联展示区域 -->
-        <div class="couplet-container">
-            <!-- 横批 -->
-            <div class="horizontal-scroll-wrapper">
-                <div class="horizontal-scroll" id="horizontalScroll">
-                    <span class="scroll-text" id="horizontalText">福满人间</span>
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 左侧：个性化定制区域 -->
+            <div class="customization-area">
+                <h2 class="section-title">个性化定制</h2>
+                
+                <!-- 关键词输入 -->
+                <div class="input-group">
+                    <label for="keywords">关键词</label>
+                    <input type="text" id="keywords" placeholder="请输入关键词，如：福、春、财..." maxlength="20">
+                    <span class="input-hint">可输入1-3个关键词，用空格分隔</span>
+                </div>
+                
+                <!-- 对联风格选择 -->
+                <div class="input-group">
+                    <label>对联风格</label>
+                    <div class="style-options">
+                        <label class="style-option">
+                            <input type="radio" name="style" value="traditional" checked>
+                            <span class="style-label">传统典雅</span>
+                        </label>
+                        <label class="style-option">
+                            <input type="radio" name="style" value="modern">
+                            <span class="style-label">现代创新</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- 按钮区域 -->
+                <div class="button-area">
+                    <button class="generate-btn primary-btn" id="generateBtn" onclick="generateCouplet()">
+                        <span class="btn-text">生成对联</span>
+                        <span class="btn-icon">✨</span>
+                    </button>
+                    <button class="generate-btn secondary-btn" id="randomBtn" onclick="generateRandomCouplet()">
+                        <span class="btn-text">随机生成</span>
+                        <span class="btn-icon">🎲</span>
+                    </button>
                 </div>
             </div>
 
-            <!-- 对联主体 -->
-            <div class="couplet-main">
-                <!-- 上联 -->
-                <div class="scroll-wrapper left">
-                    <div class="scroll upper-scroll" id="upperScroll">
-                        <div class="scroll-top"></div>
-                        <div class="scroll-body">
-                            <div class="scroll-content" id="upperText">
-                                <span>春</span>
-                                <span>风</span>
-                                <span>送</span>
-                                <span>暖</span>
-                                <span>入</span>
-                                <span>屠</span>
-                                <span>苏</span>
-                            </div>
-                        </div>
-                        <div class="scroll-bottom"></div>
+            <!-- 右侧：对联展示区域 -->
+            <div class="couplet-container">
+                <!-- 横批 -->
+                <div class="horizontal-scroll-wrapper">
+                    <div class="horizontal-scroll" id="horizontalScroll">
+                        <span class="scroll-text" id="horizontalText">福满人间</span>
                     </div>
                 </div>
 
-                <!-- 中间装饰 -->
-                <div class="center-decoration">
-                    <div class="fu-character">福</div>
-                </div>
-
-                <!-- 下联 -->
-                <div class="scroll-wrapper right">
-                    <div class="scroll lower-scroll" id="lowerScroll">
-                        <div class="scroll-top"></div>
-                        <div class="scroll-body">
-                            <div class="scroll-content" id="lowerText">
-                                <span>瑞</span>
-                                <span>雪</span>
-                                <span>迎</span>
-                                <span>春</span>
-                                <span>到</span>
-                                <span>家</span>
-                                <span>门</span>
+                <!-- 对联主体 -->
+                <div class="couplet-main">
+                    <!-- 上联 -->
+                    <div class="scroll-wrapper left">
+                        <div class="scroll upper-scroll" id="upperScroll">
+                            <div class="scroll-top"></div>
+                            <div class="scroll-body">
+                                <div class="scroll-content" id="upperText">
+                                    <span>春</span>
+                                    <span>风</span>
+                                    <span>送</span>
+                                    <span>暖</span>
+                                    <span>入</span>
+                                    <span>屠</span>
+                                    <span>苏</span>
+                                </div>
                             </div>
+                            <div class="scroll-bottom"></div>
                         </div>
-                        <div class="scroll-bottom"></div>
+                    </div>
+
+                    <!-- 中间装饰 -->
+                    <div class="center-decoration">
+                        <div class="fu-character">福</div>
+                    </div>
+
+                    <!-- 下联 -->
+                    <div class="scroll-wrapper right">
+                        <div class="scroll lower-scroll" id="lowerScroll">
+                            <div class="scroll-top"></div>
+                            <div class="scroll-body">
+                                <div class="scroll-content" id="lowerText">
+                                    <span>瑞</span>
+                                    <span>雪</span>
+                                    <span>迎</span>
+                                    <span>春</span>
+                                    <span>到</span>
+                                    <span>家</span>
+                                    <span>门</span>
+                                </div>
+                            </div>
+                            <div class="scroll-bottom"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- 按钮区域 -->
-        <div class="button-area">
-            <button class="generate-btn" id="generateBtn" onclick="generateCouplet()">
-                <span class="btn-text">生成对联</span>
-                <span class="btn-icon">✨</span>
-            </button>
         </div>
 
         <!-- 加载提示 -->

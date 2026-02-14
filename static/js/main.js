@@ -4,19 +4,26 @@
 
 // DOM元素
 const generateBtn = document.getElementById('generateBtn');
+const randomBtn = document.getElementById('randomBtn');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const errorToast = document.getElementById('errorToast');
 const errorText = document.getElementById('errorText');
 const upperText = document.getElementById('upperText');
 const lowerText = document.getElementById('lowerText');
 const horizontalText = document.getElementById('horizontalText');
+const keywordsInput = document.getElementById('keywords');
 
 /**
- * 生成对联
+ * 生成对联（个性化定制）
  */
 async function generateCouplet() {
+    // 获取用户输入
+    const keywords = keywordsInput.value.trim();
+    const style = document.querySelector('input[name="style"]:checked').value;
+    
     // 禁用按钮，显示加载状态
     generateBtn.disabled = true;
+    randomBtn.disabled = true;
     loadingOverlay.classList.add('active');
     
     try {
@@ -24,7 +31,12 @@ async function generateCouplet() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({
+                keywords: keywords,
+                style: style,
+                random: false
+            })
         });
         
         const data = await response.json();
@@ -42,6 +54,47 @@ async function generateCouplet() {
     } finally {
         // 恢复按钮状态
         generateBtn.disabled = false;
+        randomBtn.disabled = false;
+        loadingOverlay.classList.remove('active');
+    }
+}
+
+/**
+ * 随机生成对联
+ */
+async function generateRandomCouplet() {
+    // 禁用按钮，显示加载状态
+    generateBtn.disabled = true;
+    randomBtn.disabled = true;
+    loadingOverlay.classList.add('active');
+    
+    try {
+        const response = await fetch('/api/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                random: true
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // 更新对联内容
+            updateCouplet(data.upper, data.lower, data.horizontal);
+            console.log(`随机对联生成成功，尝试次数: ${data.attempts}`);
+        } else {
+            showError(data.error || '生成失败，请重试');
+        }
+    } catch (error) {
+        console.error('请求错误:', error);
+        showError('网络错误，请检查服务器连接');
+    } finally {
+        // 恢复按钮状态
+        generateBtn.disabled = false;
+        randomBtn.disabled = false;
         loadingOverlay.classList.remove('active');
     }
 }
@@ -117,8 +170,10 @@ document.addEventListener('DOMContentLoaded', () => {
  * 键盘快捷键支持
  */
 document.addEventListener('keydown', (event) => {
-    // 按空格键或回车键生成对联
-    if ((event.code === 'Space' || event.code === 'Enter') && !generateBtn.disabled) {
+    // 按空格键或回车键生成对联（仅在非输入状态）
+    if ((event.code === 'Space' || event.code === 'Enter') && 
+        !generateBtn.disabled && 
+        document.activeElement !== keywordsInput) {
         event.preventDefault();
         generateCouplet();
     }
