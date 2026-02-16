@@ -640,6 +640,17 @@ body::before {
 }
 
 /* 【关键修复】保存图片时强制设置红色背景，解决Linux Firefox下背景变黑的问题 */
+/* 首先移除3D变换，这是导致背景渲染异常的根本原因 */
+.no-animation .scroll-wrapper {
+    perspective: none !important;
+    transform: none !important;
+}
+
+.no-animation .scroll-wrapper.left,
+.no-animation .scroll-wrapper.right {
+    transform: none !important;
+}
+
 .no-animation .scroll-body {
     background: #DC143C !important;
     background-color: #DC143C !important;
