@@ -219,11 +219,13 @@ async function saveCoupletImage() {
                     clonedContainer.style.height = 'auto';
                     clonedContainer.style.minHeight = 'auto';
 
-                    // 确保卷轴内容完全显示
+                    // 确保卷轴内容完全显示，并设置红色背景
                     const scrollBodies = clonedContainer.querySelectorAll('.scroll-body');
                     scrollBodies.forEach(body => {
                         body.style.minHeight = 'auto';
                         body.style.height = 'auto';
+                        // 【关键修复】设置红色背景，解决Linux下上联下联背景变黑的问题
+                        body.style.background = '#DC143C';
                     });
 
                     // 确保装饰元素的背景也能正确渲染
