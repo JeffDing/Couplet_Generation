@@ -224,15 +224,17 @@ async function saveCoupletImage() {
                     scrollBodies.forEach(body => {
                         body.style.minHeight = 'auto';
                         body.style.height = 'auto';
-                        // 强制设置红色背景
-                        body.style.background = '#DC143C';
-                        body.style.backgroundColor = '#DC143C';
-                        body.style.backgroundImage = 'none';
+                        // 强制设置红色背景 - 使用cssText确保最高优先级
+                        body.style.cssText = 'min-height: auto; height: auto; background: #DC143C !important; background-color: #DC143C !important; background-image: none !important;';
                     });
                     
-                    // 添加内联样式覆盖伪元素
+                    // 【关键修复】添加内联样式覆盖所有可能导致问题的伪元素
+                    // 使用更高优先级的选择器
                     const overrideStyle = clonedDoc.createElement('style');
+                    overrideStyle.id = 'html2canvas-override';
                     overrideStyle.textContent = `
+                        .scroll.scroll-body,
+                        .scroll .scroll-body,
                         .scroll-body { 
                             background: #DC143C !important; 
                             background-color: #DC143C !important; 
@@ -241,11 +243,28 @@ async function saveCoupletImage() {
                         .scroll-body::before, 
                         .scroll-body::after { 
                             display: none !important; 
-                            content: none !important;
-                            background: none !important;
+                            content: "" !important;
+                            background: transparent !important;
+                            background-image: none !important;
+                            opacity: 0 !important;
+                            visibility: hidden !important;
+                            width: 0 !important;
+                            height: 0 !important;
+                        }
+                        .scroll-top::before,
+                        .scroll-top::after,
+                        .scroll-bottom::before,
+                        .scroll-bottom::after {
+                            display: none !important;
+                            content: "" !important;
                         }
                     `;
-                    clonedDoc.head.appendChild(overrideStyle);
+                    // 插入到head的最前面，确保优先级
+                    if (clonedDoc.head.firstChild) {
+                        clonedDoc.head.insertBefore(overrideStyle, clonedDoc.head.firstChild);
+                    } else {
+                        clonedDoc.head.appendChild(overrideStyle);
+                    }
 
                     // 同时处理横批的背景，确保与上联下联样式一致
                     const horizontalScrolls = clonedContainer.querySelectorAll('.horizontal-scroll');
