@@ -211,6 +211,10 @@ async function saveCoupletImage() {
                     // 添加禁用动画类（同时会应用字体设置）
                     clonedContainer.classList.add('no-animation');
 
+                    // 【关键修复】显式设置背景色，解决Linux下背景变黑的问题
+                    // CSS渐变在某些环境下可能无法正确渲染，使用纯色背景作为后备
+                    clonedContainer.style.background = '#2c1810';
+
                     // 确保容器有足够的高度显示所有内容
                     clonedContainer.style.height = 'auto';
                     clonedContainer.style.minHeight = 'auto';
@@ -221,6 +225,12 @@ async function saveCoupletImage() {
                         body.style.minHeight = 'auto';
                         body.style.height = 'auto';
                     });
+
+                    // 确保装饰元素的背景也能正确渲染
+                    const doorTexture = clonedContainer.querySelector('.door-texture');
+                    if (doorTexture) {
+                        doorTexture.style.background = '#2c1810';
+                    }
                 }
             }
         });
