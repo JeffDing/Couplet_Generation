@@ -220,12 +220,32 @@ async function saveCoupletImage() {
                     clonedContainer.style.minHeight = 'auto';
 
                     // 确保卷轴内容完全显示，并设置红色背景
-                    // CSS中的.no-animation类已经处理了背景色，这里只需要确保高度正确
                     const scrollBodies = clonedContainer.querySelectorAll('.scroll-body');
                     scrollBodies.forEach(body => {
                         body.style.minHeight = 'auto';
                         body.style.height = 'auto';
+                        // 强制设置红色背景
+                        body.style.background = '#DC143C';
+                        body.style.backgroundColor = '#DC143C';
+                        body.style.backgroundImage = 'none';
                     });
+                    
+                    // 添加内联样式覆盖伪元素
+                    const overrideStyle = clonedDoc.createElement('style');
+                    overrideStyle.textContent = `
+                        .scroll-body { 
+                            background: #DC143C !important; 
+                            background-color: #DC143C !important; 
+                            background-image: none !important; 
+                        }
+                        .scroll-body::before, 
+                        .scroll-body::after { 
+                            display: none !important; 
+                            content: none !important;
+                            background: none !important;
+                        }
+                    `;
+                    clonedDoc.head.appendChild(overrideStyle);
 
                     // 同时处理横批的背景，确保与上联下联样式一致
                     const horizontalScrolls = clonedContainer.querySelectorAll('.horizontal-scroll');
