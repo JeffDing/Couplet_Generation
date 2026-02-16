@@ -639,6 +639,26 @@ body::before {
     opacity: 1 !important;
 }
 
+/* 【关键修复】保存图片时强制设置红色背景，解决Linux Firefox下背景变黑的问题 */
+.no-animation .scroll-body {
+    background: #DC143C !important;
+    background-color: #DC143C !important;
+    background-image: none !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+.no-animation .scroll-body::before {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+    opacity: 0 !important;
+}
+
+.no-animation .scroll-body::after {
+    display: none !important;
+    content: none !important;
+}
+
 /* 保存图片时确保字体正确 */
 .no-animation .scroll-content span,
 .no-animation .scroll-text,

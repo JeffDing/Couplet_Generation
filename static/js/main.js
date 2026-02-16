@@ -220,22 +220,12 @@ async function saveCoupletImage() {
                     clonedContainer.style.minHeight = 'auto';
 
                     // 确保卷轴内容完全显示，并设置红色背景
+                    // CSS中的.no-animation类已经处理了背景色，这里只需要确保高度正确
                     const scrollBodies = clonedContainer.querySelectorAll('.scroll-body');
                     scrollBodies.forEach(body => {
                         body.style.minHeight = 'auto';
                         body.style.height = 'auto';
-                        // 【关键修复】设置红色背景，解决Linux下上联下联背景变黑的问题
-                        // html2canvas在Linux Firefox下可能无法正确渲染CSS渐变
-                        // 使用纯色背景确保兼容性，颜色与横批一致
-                        // 使用cssText确保样式优先级最高
-                        const currentStyle = body.style.cssText;
-                        body.style.cssText = currentStyle + '; background: #DC143C !important; background-color: #DC143C !important; background-image: none !important;';
                     });
-                    
-                    // 【新增】移除伪元素::before，因为它包含SVG纹理，在Linux Firefox下可能导致黑色背景
-                    const pseudoStyle = clonedDoc.createElement('style');
-                    pseudoStyle.textContent = '.scroll-body::before { display: none !important; content: none !important; background: none !important; }';
-                    clonedDoc.head.appendChild(pseudoStyle);
 
                     // 同时处理横批的背景，确保与上联下联样式一致
                     const horizontalScrolls = clonedContainer.querySelectorAll('.horizontal-scroll');
