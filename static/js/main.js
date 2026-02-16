@@ -225,13 +225,23 @@ async function saveCoupletImage() {
                         body.style.minHeight = 'auto';
                         body.style.height = 'auto';
                         // 【关键修复】设置红色背景，解决Linux下上联下联背景变黑的问题
-                        body.style.background = '#DC143C';
+                        // 使用 setProperty + important 确保覆盖CSS渐变
+                        body.style.setProperty('background', '#DC143C', 'important');
+                        body.style.setProperty('background-image', 'none', 'important');
+                    });
+
+                    // 同时处理横批的背景
+                    const horizontalScrolls = clonedContainer.querySelectorAll('.horizontal-scroll');
+                    horizontalScrolls.forEach(scroll => {
+                        scroll.style.setProperty('background', '#DC143C', 'important');
+                        scroll.style.setProperty('background-image', 'none', 'important');
                     });
 
                     // 确保装饰元素的背景也能正确渲染
                     const doorTexture = clonedContainer.querySelector('.door-texture');
                     if (doorTexture) {
-                        doorTexture.style.background = '#2c1810';
+                        doorTexture.style.setProperty('background', '#2c1810', 'important');
+                        doorTexture.style.setProperty('background-image', 'none', 'important');
                     }
                 }
             }
