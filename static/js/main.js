@@ -4,7 +4,6 @@
 
 // DOM元素
 const generateBtn = document.getElementById('generateBtn');
-const randomBtn = document.getElementById('randomBtn');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const errorToast = document.getElementById('errorToast');
 const errorText = document.getElementById('errorText');
@@ -14,29 +13,30 @@ const horizontalText = document.getElementById('horizontalText');
 const keywordsInput = document.getElementById('keywords');
 
 /**
- * 生成对联（个性化定制）
+ * 生成对联（有关键词时根据关键词生成，无关键词时随机生成）
  */
 async function generateCouplet() {
     // 获取用户输入
     const keywords = keywordsInput.value.trim();
     const style = document.querySelector('input[name="style"]:checked').value;
+    // 如果没有关键词，则为随机生成模式
+    const isRandom = !keywords;
     
     // 禁用按钮，显示加载状态
     generateBtn.disabled = true;
-    randomBtn.disabled = true;
     loadingOverlay.classList.add('active');
     
     try {
+        const requestBody = isRandom 
+            ? { random: true }
+            : { keywords: keywords, style: style, random: false };
+        
         const response = await fetch('/api/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                keywords: keywords,
-                style: style,
-                random: false
-            })
+            body: JSON.stringify(requestBody)
         });
         
         const data = await response.json();
@@ -44,7 +44,7 @@ async function generateCouplet() {
         if (data.success) {
             // 更新对联内容
             updateCouplet(data.upper, data.lower, data.horizontal);
-            console.log(`对联生成成功，尝试次数: ${data.attempts}`);
+            console.log(`${isRandom ? '随机' : ''}对联生成成功，尝试次数: ${data.attempts}`);
         } else {
             showError(data.error || '生成失败，请重试');
         }
@@ -54,47 +54,6 @@ async function generateCouplet() {
     } finally {
         // 恢复按钮状态
         generateBtn.disabled = false;
-        randomBtn.disabled = false;
-        loadingOverlay.classList.remove('active');
-    }
-}
-
-/**
- * 随机生成对联
- */
-async function generateRandomCouplet() {
-    // 禁用按钮，显示加载状态
-    generateBtn.disabled = true;
-    randomBtn.disabled = true;
-    loadingOverlay.classList.add('active');
-    
-    try {
-        const response = await fetch('/api/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                random: true
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            // 更新对联内容
-            updateCouplet(data.upper, data.lower, data.horizontal);
-            console.log(`随机对联生成成功，尝试次数: ${data.attempts}`);
-        } else {
-            showError(data.error || '生成失败，请重试');
-        }
-    } catch (error) {
-        console.error('请求错误:', error);
-        showError('网络错误，请检查服务器连接');
-    } finally {
-        // 恢复按钮状态
-        generateBtn.disabled = false;
-        randomBtn.disabled = false;
         loadingOverlay.classList.remove('active');
     }
 }
@@ -178,3 +137,116 @@ document.addEventListener('keydown', (event) => {
         generateCouplet();
     }
 });
+
+/**
+ * 复制对联文字
+ */
+async function copyCoupletText() {
+    const copyBtn = document.getElementById('copyBtn');
+    
+    try {
+        // 获取对联文字
+        const horizontalText = document.getElementById('horizontalText').textContent;
+        const upperText = document.getElementById('upperText').textContent;
+        const lowerText = document.getElementById('lowerText').textContent;
+        
+        // 组合文字，添加标签
+        const textToCopy = `横批：${horizontalText}\n上联：${upperText}\n下联：${lowerText}`;
+        
+        // 复制到剪贴板
+        await navigator.clipboard.writeText(textToCopy);
+        
+        // 显示成功提示
+        showError('对联文字已复制到剪贴板！');
+        
+        // 临时改变按钮文字
+        const originalText = copyBtn.querySelector('.btn-text').textContent;
+        copyBtn.querySelector('.btn-text').textContent = '已复制！';
+        setTimeout(() => {
+            copyBtn.querySelector('.btn-text').textContent = originalText;
+        }, 2000);
+        
+    } catch (error) {
+        console.error('复制失败:', error);
+        showError('复制失败，请重试');
+    }
+}
+
+/**
+ * 保存对联为图片
+ */
+async function saveCoupletImage() {
+    const saveBtn = document.getElementById('saveBtn');
+    const coupletContainer = document.querySelector('.couplet-container');
+
+    // 禁用保存按钮
+    saveBtn.disabled = true;
+    saveBtn.querySelector('.btn-text').textContent = '保存中...';
+
+    try {
+        // 等待所有字体加载完成
+        console.log('等待字体加载...');
+        await document.fonts.ready;
+
+        // 额外等待确保字体完全加载
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        console.log('开始生成图片...');
+
+        // 使用html2canvas生成图片 - 直接截取整个容器
+        const canvas = await html2canvas(coupletContainer, {
+            backgroundColor: '#2c1810',
+            scale: 2, // 提高清晰度
+            useCORS: true,
+            allowTaint: true,
+            logging: true,
+            scrollX: 0,
+            scrollY: 0,
+            onclone: function(clonedDoc) {
+                console.log('克隆文档完成，开始处理...');
+
+                // 在克隆的文档中找到容器
+                const clonedContainer = clonedDoc.querySelector('.couplet-container');
+                if (clonedContainer) {
+                    // 添加禁用动画类（同时会应用字体设置）
+                    clonedContainer.classList.add('no-animation');
+
+                    // 确保容器有足够的高度显示所有内容
+                    clonedContainer.style.height = 'auto';
+                    clonedContainer.style.minHeight = 'auto';
+
+                    // 确保卷轴内容完全显示
+                    const scrollBodies = clonedContainer.querySelectorAll('.scroll-body');
+                    scrollBodies.forEach(body => {
+                        body.style.minHeight = 'auto';
+                        body.style.height = 'auto';
+                    });
+                }
+            }
+        });
+
+        console.log('Canvas生成完成:', canvas.width, 'x', canvas.height);
+
+        // 创建下载链接
+        const link = document.createElement('a');
+        const timestamp = new Date().getTime();
+        link.download = `新春对联_${timestamp}.png`;
+        link.href = canvas.toDataURL('image/png');
+
+        // 触发下载
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // 显示成功提示
+        showError('对联已保存为图片！');
+
+    } catch (error) {
+        console.error('保存图片失败:', error);
+        showError('保存失败，请重试');
+    } finally {
+        // 恢复按钮状态
+        saveBtn.disabled = false;
+        saveBtn.querySelector('.btn-text').textContent = '保存图片';
+    }
+}

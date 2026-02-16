@@ -6,6 +6,18 @@
     <title>新春对联生成器</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        /* 确保字体在保存时正确加载 */
+        @font-face {
+            font-family: 'Ma Shan Zheng';
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'ZCOOL XiaoWei';
+            font-display: swap;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -49,15 +61,39 @@
                         <span class="btn-text">生成对联</span>
                         <span class="btn-icon">✨</span>
                     </button>
-                    <button class="generate-btn secondary-btn" id="randomBtn" onclick="generateRandomCouplet()">
-                        <span class="btn-text">随机生成</span>
-                        <span class="btn-icon">🎲</span>
+                    <button class="generate-btn save-btn" id="saveBtn" onclick="saveCoupletImage()">
+                        <span class="btn-text">保存图片</span>
+                        <span class="btn-icon">💾</span>
+                    </button>
+                    <button class="generate-btn copy-btn" id="copyBtn" onclick="copyCoupletText()">
+                        <span class="btn-text">复制文字</span>
+                        <span class="btn-icon">📋</span>
                     </button>
                 </div>
             </div>
 
             <!-- 右侧：对联展示区域 -->
             <div class="couplet-container">
+                <!-- 大门纹理背景 -->
+                <div class="door-texture"></div>
+                
+                <!-- 金色装饰边框 -->
+                <div class="door-border"></div>
+                
+                <!-- 门钉装饰 -->
+                <div class="door-nail" style="top: 40px; left: 40px;"></div>
+                <div class="door-nail" style="top: 40px; right: 40px;"></div>
+                <div class="door-nail" style="bottom: 40px; left: 40px;"></div>
+                <div class="door-nail" style="bottom: 40px; right: 40px;"></div>
+                <div class="door-nail" style="top: 100px; left: 40px;"></div>
+                <div class="door-nail" style="top: 100px; right: 40px;"></div>
+                <div class="door-nail" style="bottom: 100px; left: 40px;"></div>
+                <div class="door-nail" style="bottom: 100px; right: 40px;"></div>
+                
+                <!-- 门环装饰 -->
+                <div class="door-knocker" style="top: 50%; left: 30px; transform: translateY(-50%);"></div>
+                <div class="door-knocker" style="top: 50%; right: 30px; transform: translateY(-50%);"></div>
+                
                 <!-- 横批 -->
                 <div class="horizontal-scroll-wrapper">
                     <div class="horizontal-scroll" id="horizontalScroll">

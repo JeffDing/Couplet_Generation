@@ -163,11 +163,8 @@ body::before {
     font-weight: bold;
     letter-spacing: 8px;
     margin-bottom: 10px;
-    background: linear-gradient(180deg, #FFD700 0%, #FFA500 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+    color: #FFD700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .subtitle {
@@ -183,11 +180,103 @@ body::before {
     align-items: center;
     gap: 20px;
     width: 100%;
+    position: relative;
+    padding: 40px 60px;
+    background: linear-gradient(180deg, #2c1810 0%, #3d2317 50%, #2c1810 100%);
+    border-radius: 20px;
+    box-shadow:
+        0 0 0 8px #8B4513,
+        0 0 0 12px #D2691E,
+        0 0 0 16px #8B4513,
+        0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* 大门纹理效果 - 使用真实DOM元素 */
+.door-texture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 80px,
+            rgba(0, 0, 0, 0.15) 80px,
+            rgba(0, 0, 0, 0.15) 82px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 120px,
+            rgba(0, 0, 0, 0.1) 120px,
+            rgba(0, 0, 0, 0.1) 122px
+        );
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* 大门装饰边框 - 使用真实DOM元素 */
+.door-border {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    border: 4px solid #DAA520;
+    border-radius: 12px;
+    box-shadow:
+        inset 0 0 30px rgba(218, 165, 32, 0.3),
+        0 0 20px rgba(218, 165, 32, 0.2);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* 门钉装饰 */
+.couplet-container .door-nail {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: radial-gradient(circle at 30% 30%, #FFD700 0%, #B8860B 50%, #8B6914 100%);
+    border-radius: 50%;
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.5),
+        inset 0 1px 2px rgba(255, 255, 255, 0.5);
+    z-index: 1;
+}
+
+/* 门环装饰 */
+.couplet-container .door-knocker {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 6px solid #B8860B;
+    border-radius: 50%;
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.couplet-container .door-knocker::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle at 30% 30%, #FFD700 0%, #B8860B 100%);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* 横批 */
 .horizontal-scroll-wrapper {
     perspective: 1000px;
+    position: relative;
+    z-index: 2;
 }
 
 .horizontal-scroll {
@@ -240,6 +329,8 @@ body::before {
     align-items: flex-start;
     gap: 60px;
     width: 100%;
+    position: relative;
+    z-index: 2;
 }
 
 /* 卷轴包装器 */
@@ -345,7 +436,6 @@ body::before {
     color: #1a1a1a;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.2);
-    letter-spacing: 5px;
     transition: transform 0.3s ease;
 }
 
@@ -448,6 +538,16 @@ body::before {
     color: #FFD700;
 }
 
+.save-btn {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    color: #FFD700;
+}
+
+.copy-btn {
+    background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+    color: #FFD700;
+}
+
 .btn-icon {
     font-size: 1.3rem;
 }
@@ -531,6 +631,32 @@ body::before {
 .scroll-content span {
     animation: fadeInUp 0.5s ease forwards;
     opacity: 0;
+}
+
+/* 禁用动画 - 用于保存图片 */
+.no-animation .scroll-content span {
+    animation: none !important;
+    opacity: 1 !important;
+}
+
+/* 保存图片时确保字体正确 */
+.no-animation .scroll-content span,
+.no-animation .scroll-text,
+.no-animation .fu-character {
+    font-family: 'Ma Shan Zheng', 'ZCOOL XiaoWei', cursive, serif !important;
+}
+
+/* 保存图片时缩小文字间距 */
+.no-animation .scroll-content {
+    gap: 10px !important;
+}
+
+/* 保存图片时移除文字的额外间距 */
+.no-animation .scroll-content span {
+    line-height: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
 }
 
 .scroll-content span:nth-child(1) { animation-delay: 0.1s; }
