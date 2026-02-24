@@ -28,7 +28,7 @@
 ### 后端技术
 - **Flask**：轻量级Web框架
 - **Flask-CORS**：跨域资源共享支持
-- **Requests**：HTTP请求库，用于调用AI API
+- **OpenAI**：OpenAI Python库，用于调用AI API
 
 ### 前端技术
 - **HTML5 + CSS3**：页面结构与样式
@@ -125,6 +125,13 @@ export MODEL_NAME="your_model_name"
 export API_KEY="your_api_key"
 ```
 
+示例配置（参考run.sh）：
+```bash
+export API_URL="https://api.modelarts-maas.com/v2/chat/completions"
+export MODEL_NAME="deepseek-v3.2"
+export API_KEY="your_api_key_here"
+```
+
 3. 启动服务：
 ```bash
 python app.py
@@ -172,7 +179,7 @@ bash run.sh
 
 - **flask>=2.3.0**：Web框架
 - **flask-cors>=4.0.0**：跨域支持
-- **requests>=2.31.0**：HTTP请求库
+- **openai>=1.0.0**：OpenAI Python库
 - **gunicorn>=21.0.0**：生产环境WSGI服务器（可选）
 
 ## 许可证

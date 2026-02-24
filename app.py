@@ -1,11 +1,11 @@
 """
 对联生成系统 - 后端服务
-使用ModelArts Studio API生成对联
+使用OpenAI库调用API生成对联
 """
 
 import os
 import re
-import requests
+from openai import OpenAI
 from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 
@@ -17,34 +17,31 @@ API_URL = os.environ.get('API_URL', '')
 MODEL_NAME = os.environ.get('MODEL_NAME', '')
 API_KEY = os.environ.get('API_KEY', '')
 
+# 初始化OpenAI客户端
+client = OpenAI(
+    api_key=API_KEY,
+    base_url=API_URL.rstrip('/chat/completions') if API_URL else None
+)
+
 
 def call_ai_api(prompt):
-    """调用ModelArts Studio API"""
+    """使用OpenAI库调用API"""
     if not API_URL or not MODEL_NAME or not API_KEY:
         raise ValueError("请设置环境变量: API_URL, MODEL_NAME, API_KEY")
     
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {API_KEY}"
-    }
-    
-    payload = {
-        "model": MODEL_NAME,
-        "messages": [
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        "temperature": 0.8,
-        "max_tokens": 500
-    }
-    
     try:
-        response = requests.post(API_URL, headers=headers, json=payload, timeout=30)
-        response.raise_for_status()
-        result = response.json()
-        return result['choices'][0]['message']['content']
+        response = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.8,
+            max_tokens=500
+        )
+        return response.choices[0].message.content
     except Exception as e:
         print(f"API调用错误: {e}")
         return None
